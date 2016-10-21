@@ -1,2 +1,2 @@
 # OrangePI_OLED
-Add OLED display with sys info for your OPI board
+Add OLED display with sys info to your OPI board
