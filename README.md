@@ -4,11 +4,11 @@ Add OLED display with sys info to your OPI board
 
 | OLED |    Name   | Physical |   Name    | OLED |
 |-----:|----------:|:--------:|:----------|:-----|
-|`vcc` |    3.3v   |  1 I 2   |       5v  |      |
+|`VDD` |    3.3v   |  1 I 2   |       5v  |      |
 |`SDA` |   SDA.0   |  3 I 4   |       5v  |      |
 |`SCK` |   SCL.0   |  5 I 6   |       0v  |      |
 |      |  GPIO.7   |  7 I 8   |     TxD3  |      |
-| `0v` |    0v     |  9 I 10  |     RxD3  |      |
+|`GND` |    0v     |  9 I 10  |     RxD3  |      |
 |      |   RxD2    | 11 I 12  |   GPIO.1  |      |
 |      |   TxD2    | 13 I 14  |       0v  |      |
 |      |   CTS2    | 15 I 16  |   GPIO.4  |      |
