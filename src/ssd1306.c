@@ -510,6 +510,26 @@ float GetMemUsage() {
 //   printf("result %f \n", result);
    return result;
 }
+/*
+ */
+//cat /sys/devices/virtual/thermal/thermal_zone0/temp
+int GetCPUTemp() {
+   int FileHandler;
+   static char FileBuffer[1024];
+   int CPU_temp;
+   float result;
+   FileHandler = open("/sys/devices/virtual/thermal/thermal_zone0/temp", O_RDONLY);
+   if(FileHandler < 0) {
+      return -1; }
+   read(FileHandler, FileBuffer, sizeof(FileBuffer) - 1);
+//   printf("%s", FileBuffer);
+   sscanf(FileBuffer, "%d", &CPU_temp);
+   close(FileHandler);
+   printf( "CPU_temp: %d\n", CPU_temp );
+//   result = 1.0 - (float)memFree / memTotal;
+//   printf("result %f \n", result);
+   return CPU_temp;
+}
 
 int main (void) {
     int x, y;
@@ -563,15 +583,19 @@ int main (void) {
                 }
                 printf("%-8s <%s>\n", ifa->ifa_name, host);
                 snprintf ( text_buffer, sizeof(text_buffer), "wlan0: %s", host );
-                ssd1306DrawString(0,  39, text_buffer, 1, WHITE, LAYER0); 
+                ssd1306DrawString(0,  31, text_buffer, 1, WHITE, LAYER0); 
 //                printf("<%d>\n", n);
 //                printf("<%s>\n", text_buffer);
 //                break; // IP found, exit loop
             } 
             if ( (strcmp ("wlan0", ifa->ifa_name ) == 0) && family == AF_PACKET && ifa->ifa_data != NULL ) {
-                   struct rtnl_link_stats *stats = ifa->ifa_data;
-                   snprintf ( text_buffer, sizeof(text_buffer), "tx = %6u Kb; rx_bytes = %6u Kb\n",
-                           stats->tx_bytes/1024, stats->rx_bytes/1024 );
+                struct rtnl_link_stats *stats = ifa->ifa_data;
+                snprintf ( text_buffer, sizeof(text_buffer), "tx = %7u Kb",
+                           stats->tx_bytes/1024);
+                ssd1306DrawString(0,  39, text_buffer, 1, WHITE, LAYER0);  
+                
+                snprintf ( text_buffer, sizeof(text_buffer), "rx = %7u Kb\n",
+                           stats->rx_bytes/1024 );
                 ssd1306DrawString(0,  47, text_buffer, 1, WHITE, LAYER0);    
 //                   printf("\t\ttx_packets = %10u; rx_packets = %10u\n"
 //                          "\t\ttx_bytes   = %10u; rx_bytes   = %10u\n",
@@ -584,17 +608,21 @@ int main (void) {
          */
 //        _font = (FONT_INFO*)&ubuntuMono_16ptFontInfo;
         int c = GetCPULoad() ;
-        snprintf ( text_buffer, sizeof(text_buffer), " CPU load: %3d%%", c );
+        snprintf ( text_buffer, sizeof(text_buffer), "CPU load: %3d%%", c );
         printf("%s\n", text_buffer);
-        ssd1306DrawString(4,  4, text_buffer, 1, WHITE, LAYER0); 
+        ssd1306DrawString(4,  14, text_buffer, 1, WHITE, LAYER0); 
         /* Memory usage
          */
         float m = GetMemUsage();
         snprintf ( text_buffer, sizeof(text_buffer), "Mem used: %3.0f%%", m*100 );
         printf("%s\n", text_buffer);
-        ssd1306DrawString(4,  20, text_buffer, 1, WHITE, LAYER0); 
-        ssd1306DrawRect(0, 16, 127, 16, INVERSE, LAYER0);
-        ssd1306FillRect(2, 18, (int)(123 * m), 12, INVERSE, LAYER0);
+        ssd1306DrawString(4,  2, text_buffer, 1, WHITE, LAYER0); 
+        ssd1306DrawRect(0, 0, 127, 13, INVERSE, LAYER0);
+        ssd1306FillRect(2, 2, (int)(123 * m), 9, INVERSE, LAYER0);
+        
+        
+        
+        GetCPUTemp();
         /* Refresh screen
          */
         ssd1306Refresh();
