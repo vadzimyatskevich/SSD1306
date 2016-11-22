@@ -17,13 +17,12 @@ A user-space program to get data from an I2C device.
 #include <fcntl.h>
 #include <time.h>
 #include <unistd.h>
-       #include <sys/types.h>
-       #include <ifaddrs.h>
-       #include <arpa/inet.h>
-       #include <sys/socket.h>
-       #include <netdb.h>
-       #include <linux/if_link.h>
-
+#include <sys/types.h>
+#include <ifaddrs.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <linux/if_link.h>
 
 #include "ssd1306.h"
 
@@ -501,18 +500,22 @@ int GetCPULoad() {
 float GetMemUsage() {
    int FileHandler;
    char FileBuffer[1024];
-   int memTotal;
-   int memFree;
+   int memTotal, memFree, memBuf,memCached;
+   int ;
    float result;
    FileHandler = open("/proc/meminfo", O_RDONLY);
    if(FileHandler < 0) {
       return -1; }
    read(FileHandler, FileBuffer, sizeof(FileBuffer) - 1);
 //   printf("%s", FileBuffer);
-   sscanf(FileBuffer, "MemTotal:         %d kB\n MemFree:          %d kB", &memTotal, &memFree);
+//   Buffers:          961452 kB
+//Cached:          2347236 kB
+   
+   sscanf(FileBuffer, "MemTotal:         %d kB\n MemFree:          %d kB\n Buffers:           %d kB\n Cached:           %d kB",
+           &memTotal, &memFree, &memBuf, &memCached);
    close(FileHandler);
-   printf("tot %d \nfree %d \n", memTotal, memFree);
-   result = 1.0 - (float)memFree / memTotal;
+//   printf("tot %d \nfree %d \nbuf %d \ncache %d \n", memTotal, memFree, memBuf, memCached);
+   result = 1.0 - (float)(memFree + memCached) / memTotal;
 //   printf("result %f \n", result);
    return result;
 }
@@ -543,8 +546,9 @@ int main (void) {
     uint8_t time_buffer[80];
     uint8_t text_buffer[100];    
     struct ifaddrs *ifaddr, *ifa;
-    int family, s, n;
+    int family, s, n, row;
     char host[NI_MAXHOST];
+
     /* Init I2C bus  */
     bus = i2c_init((char*)&"/dev/i2c-0", 0x3c); //dev, slavei2caddr
 
@@ -552,13 +556,15 @@ int main (void) {
     ssd1306Init(SSD1306_SWITCHCAPVCC);
 
     while (1) {
+        row = 2;
         _font = (FONT_INFO*)&ubuntuMono_8ptFontInfo;
         /* Display time */
         mytime = time(NULL);
         tm = localtime (&mytime);
         ssd1306ClearScreen(LAYER0 | LAYER1) ;
-        strftime(time_buffer, 80,"%H:%M:%S %x", tm);
-        ssd1306DrawString(0,  55, time_buffer, 1, WHITE, LAYER0); 
+        strftime(time_buffer, 80,"  %H:%M:%S %x", tm);
+        ssd1306DrawString(0,  row * 8, time_buffer, 1, WHITE, LAYER0);
+        row++;
 
         /* Display IP */
         /* Get network information */
@@ -588,7 +594,8 @@ int main (void) {
                 }
                 printf("%-8s <%s>\n", ifa->ifa_name, host);
                 snprintf ( text_buffer, sizeof(text_buffer), "eth0: %s", host );
-                ssd1306DrawString(0,  31, text_buffer, 1, WHITE, LAYER0); 
+                ssd1306DrawString(0,  row * 8, text_buffer, 1, WHITE, LAYER0); 
+                row++;
 //                printf("<%d>\n", n);
 //                printf("<%s>\n", text_buffer);
 //                break; // IP found, exit loop
@@ -605,25 +612,31 @@ int main (void) {
                 }
                 printf("%-8s <%s>\n", ifa->ifa_name, host);
                 snprintf ( text_buffer, sizeof(text_buffer), "wlan0: %s", host );
-                ssd1306DrawString(0,  39, text_buffer, 1, WHITE, LAYER0); 
+                ssd1306DrawString(0,  row * 8, text_buffer, 1, WHITE, LAYER0); 
+                row++;
 //                printf("<%d>\n", n);
 //                printf("<%s>\n", text_buffer);
 //                break; // IP found, exit loop
             } 
-//            if ( (strcmp ("eth0", ifa->ifa_name ) == 0) && family == AF_PACKET && ifa->ifa_data != NULL ) {
-//                struct rtnl_link_stats *stats = ifa->ifa_data;
-//                snprintf ( text_buffer, sizeof(text_buffer), "tx = %7u Kb",
-//                           stats->tx_bytes/1024);
-//                ssd1306DrawString(0,  39, text_buffer, 1, WHITE, LAYER0);  
-//                
-//                snprintf ( text_buffer, sizeof(text_buffer), "rx = %7u Kb\n",
-//                           stats->rx_bytes/1024 );
-//                ssd1306DrawString(0,  47, text_buffer, 1, WHITE, LAYER0);    
-////                   printf("\t\ttx_packets = %10u; rx_packets = %10u\n"
-////                          "\t\ttx_bytes   = %10u; rx_bytes   = %10u\n",
-////                          stats->tx_packets, stats->rx_packets,
-////                          stats->tx_bytes, stats->rx_bytes);
-//               }
+            if ((strcmp ("wlan1", ifa->ifa_name ) == 0) && family == AF_INET) {
+                s = getnameinfo(ifa->ifa_addr,
+                       (ifa->ifa_addr->sa_family == AF_INET) ? sizeof(struct sockaddr_in) :
+                                             sizeof(struct sockaddr_in6),
+                       host, NI_MAXHOST,
+                       NULL, 0, NI_NUMERICHOST);
+                if (s != 0) {
+                   printf("getnameinfo() failed: %s\n", gai_strerror(s));
+                   exit(EXIT_FAILURE);
+                }
+                printf("%-8s <%s>\n", ifa->ifa_name, host);
+                snprintf ( text_buffer, sizeof(text_buffer), "wlan1: %s", host );
+                ssd1306DrawString(0,  row * 8, text_buffer, 1, WHITE, LAYER0); 
+                row++;
+//                printf("<%d>\n", n);
+//                printf("<%s>\n", text_buffer);
+//                break; // IP found, exit loop
+            } 
+
         }
         freeifaddrs(ifaddr);
         /* CPU usage
@@ -632,7 +645,8 @@ int main (void) {
         int c = GetCPULoad() ;
         snprintf ( text_buffer, sizeof(text_buffer), "CPU load: %3d%%", c );
         printf("%s\n", text_buffer);
-        ssd1306DrawString(0,  14, text_buffer, 1, WHITE, LAYER0); 
+        ssd1306DrawString(0,  row * 8, text_buffer, 1, WHITE, LAYER0); 
+        row++;
         /* Memory usage
          */
         float m = GetMemUsage();
@@ -647,10 +661,9 @@ int main (void) {
         int t = GetCPUTemp() ;
         snprintf ( text_buffer, sizeof(text_buffer), "CPU temp: %3d C", t );
         printf("%s\n", text_buffer);
-        ssd1306DrawString(0,  22, text_buffer, 1, WHITE, LAYER0); 
-        
-        
-        GetCPUTemp();
+        ssd1306DrawString(0,  row * 8, text_buffer, 1, WHITE, LAYER0); 
+        row++;
+
         /* Refresh screen
          */
         ssd1306Refresh();
