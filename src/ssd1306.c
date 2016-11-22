@@ -42,9 +42,7 @@ static uint8_t    buffer[SSD1306_LCDWIDTH * SSD1306_LCDHEIGHT / 8];
 static uint8_t    buffer_ol[SSD1306_LCDWIDTH * SSD1306_LCDHEIGHT / 8];
 #endif    
 
-static uint8_t      _width    = SSD1306_LCDWIDTH;
-static uint8_t      _height   = SSD1306_LCDHEIGHT;
-       FONT_INFO    *_font;
+FONT_INFO    *_font;
  
 void i2c_write( uint8_t addr, 
                 uint8_t * value, 
@@ -272,13 +270,13 @@ void   ssd1306DrawPixel(int16_t x, int16_t y, uint16_t color, uint16_t layer)
 void ssd1306DrawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color, uint16_t layer) {
   int16_t steep = (abs(y1 - y0) > abs(x1 - x0));
   if (steep) {
-    swap(x0, y0);
-    swap(x1, y1);
+    SWAP(x0, y0);
+    SWAP(x1, y1);
   }
 
   if (x0 > x1) {
-    swap(x0, x1);
-    swap(y0, y1);
+    SWAP(x0, x1);
+    SWAP(y0, y1);
   }
 
   int16_t dx, dy;
@@ -413,7 +411,7 @@ uint16_t color, uint16_t layer) {
  *    ssd1306Refresh();
  *    @endcode
 */
-void  ssd1306DrawString(int16_t x, int16_t y, uint8_t *text, uint8_t size, 
+void  ssd1306DrawString(int16_t x, int16_t y, int8_t *text, uint8_t size, 
                         uint16_t color, uint16_t layer)
 {
   static uint16_t l, pos;
@@ -501,7 +499,6 @@ float GetMemUsage() {
    int FileHandler;
    char FileBuffer[1024];
    int memTotal, memFree, memBuf,memCached;
-   int ;
    float result;
    FileHandler = open("/proc/meminfo", O_RDONLY);
    if(FileHandler < 0) {
@@ -528,19 +525,16 @@ int GetCPUTemp() {
    int FileHandler;
    char FileBuffer[1024];
    int CPU_temp;
-   float result;
    FileHandler = open("/sys/devices/virtual/thermal/thermal_zone0/temp", O_RDONLY);
    if(FileHandler < 0) {
       return -1; }
    read(FileHandler, FileBuffer, sizeof(FileBuffer) - 1);
    sscanf(FileBuffer, "%d", &CPU_temp);
    close(FileHandler);
-   printf( "CPU_temp: %d\n", CPU_temp );
    return CPU_temp;
 }
 
 int main (void) {
-    int x, y;
     time_t mytime;
     struct tm *tm;
     uint8_t time_buffer[80];

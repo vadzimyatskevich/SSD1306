@@ -18,7 +18,6 @@
 extern "C" {
 #endif
 
-//#include "stm32f1xx_hal.h"
 #include <math.h>
 #include <unistd.h>
 #include "font.h"
@@ -27,24 +26,12 @@ extern "C" {
 #include "ubuntuMono_24pt.h"
 #include "ubuntuMono_48pt.h"
 
-#define 	SSD1306_SPI SPI2
-
-// Pin Definitions
-#define     SSD1306_DC_PORT             GPIOB     // Data/Command
-#define     SSD1306_DC_PIN              (12)
-#define     SSD1306_RST_PORT            GPIOB     // Reset
-#define     SSD1306_RST_PIN             (13)
-#define     SSD1306_CS_PORT             GPIOA     // Select
-#define     SSD1306_CS_PIN              (15)
-#define     SSD1306_SCLK_PORT           GPIOB     // Serial Clock
-#define     SSD1306_SCLK_PIN            (3)
-#define     SSD1306_SDAT_PORT           GPIOB     // Serial Data
-#define     SSD1306_SDAT_PIN            (5)
 
 #define     SSD1306_COUNTOF(a)          (sizeof(a) / sizeof(a[0]))
 #define     SSD1306_MIN(a,b)            (((a) < (b)) ? (a) : (b))
 #define     SSD1306_MAX(a,b)            (((a) > (b)) ? (a) : (b))
-
+#define     SWAP(a, b)                  { int16_t t = a; a = b; b = t; }
+    
 #define     BLACK                       0
 #define     WHITE                       1
 #define     INVERSE                     2
@@ -85,20 +72,6 @@ extern "C" {
 // macros
 #define SSD1306MSDELAY(c)               usleep ( c * 1000 );
 
-// set to 0 if you don't use polygons
-#define	    MAX_POLY_CORNERS            10
-typedef struct {
-	double x;
-	double y;
-}	SSD1306_pointTypeDef;
-
-typedef struct {
-	SSD1306_pointTypeDef * SSD1306_points_pointer;
-	int SSD1306_points_number;
-}	SSD1306_polyTypeDef;
-
-#define swap(a, b)       { int16_t t = a; a = b; b = t; }
-
 // Initialisation/Config Prototypes
 //inline void ssd1306SendByte(uint8_t byte);
 //void        ssd1306SendByte(uint8_t);
@@ -127,7 +100,7 @@ void        ssd1306DrawRect(int16_t, int16_t, int16_t, int16_t, uint16_t, uint16
 //void        ssd1306DrawBitmap(int16_t, int16_t, uint8_t*, int16_t, int16_t, uint16_t);
 void        ssd1306SetFont(FONT_INFO*);
 int16_t     ssd1306DrawChar(int16_t, int16_t, uint8_t, uint8_t, uint16_t, uint16_t);
-void        ssd1306DrawString( int16_t, int16_t, uint8_t * , uint8_t, uint16_t, uint16_t);
+void        ssd1306DrawString( int16_t, int16_t, int8_t * , uint8_t, uint16_t, uint16_t);
 //void        ssd1306ShiftFrameBuffer( uint16_t height, uint16_t direction);
 void        ssd1306MixFrameBuffer(void);
 
