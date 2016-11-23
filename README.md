@@ -1,5 +1,6 @@
 # OrangePI_OLED
 Add OLED display with sys info to your Orange PI board
+
 **Display connection:**
 
 | OLED |    Name   |  Pin  | 
