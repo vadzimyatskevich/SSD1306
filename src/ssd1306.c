@@ -30,8 +30,8 @@
 #define NI_MAXSERV 32
 
 char buf[10];
- int com_serial;
- int failcount;
+int com_serial;
+int failcount;
  
 int bus; //i2c bus descriptor
 FONT_INFO    *_font; 
@@ -47,7 +47,6 @@ FONT_INFO    *_font;
 void i2c_write( uint8_t addr, 
                 uint8_t * value, 
                 int nbytes);
-
 
 /**
  * @brief Init I2Cdevice
@@ -86,54 +85,53 @@ void  ssd1306Init(uint8_t vccstate)
 {
   _font = (FONT_INFO*)&ubuntuMono_24ptFontInfo;
   
-// Initialisation sequence
-   ssd1306TurnOff();
-//  1. set mux ratio
+    // Initialisation sequence
+    ssd1306TurnOff();
+    //  1. set mux ratio
     ssd1306Command(   SSD1306_SETMULTIPLEX );
     ssd1306Command(   0x3F );
-//  2. set display offset
+    //  2. set display offset
     ssd1306Command(   SSD1306_SETDISPLAYOFFSET );
     ssd1306Command(   0x0 );
-//  3. set display start line
+    //  3. set display start line
     ssd1306Command(   SSD1306_SETSTARTLINE | 0x0 ); 
     ssd1306Command( SSD1306_MEMORYMODE);                    // 0x20
     ssd1306Command( 0x00);                                  // 0x0 act like ks0108
-//  4. set Segment re-map A0h/A1h    
+    //  4. set Segment re-map A0h/A1h    
     ssd1306Command(   SSD1306_SEGREMAP | 0x1);
-//   5. Set COM Output Scan Direction C0h/C8h
+    //   5. Set COM Output Scan Direction C0h/C8h
     ssd1306Command(   SSD1306_COMSCANDEC);
-//  6. Set COM Pins hardware configuration DAh, 12
+    //  6. Set COM Pins hardware configuration DAh, 12
     ssd1306Command(   SSD1306_SETCOMPINS);
     ssd1306Command(   0x12);
-//  7. Set Contrast Control 81h, 7Fh
+    //  7. Set Contrast Control 81h, 7Fh
     ssd1306Command(   SSD1306_SETCONTRAST );
     if (vccstate == SSD1306_EXTERNALVCC) { 
         ssd1306Command(   0x9F );
     } else { 
         ssd1306Command(   0xff );
     }
-//  8. Disable Entire Display On A4h
+    //  8. Disable Entire Display On A4h
     ssd1306Command(   SSD1306_DISPLAYALLON_RESUME);
-//  9. Set Normal Display A6h 
+    //  9. Set Normal Display A6h 
     ssd1306Command(   SSD1306_NORMALDISPLAY);
-//  10. Set Osc Frequency  D5h, 80h 
+    //  10. Set Osc Frequency  D5h, 80h 
     ssd1306Command(   SSD1306_SETDISPLAYCLOCKDIV);
     ssd1306Command(   0x80);
-//  11. Enable charge pump regulator 8Dh, 14h 
+    //  11. Enable charge pump regulator 8Dh, 14h 
     ssd1306Command(   SSD1306_CHARGEPUMP );
     if (vccstate == SSD1306_EXTERNALVCC) { 
         ssd1306Command(   0x10);
     } else { 
         ssd1306Command(   0x14);
     }
-//  12. Display On AFh 
+    //  12. Display On AFh 
     ssd1306TurnOn();
 
 }
 
 /**
  * @brief Renders the contents of the pixel buffer on the LCD
- * 
  */
 void ssd1306Refresh(void) 
 {
@@ -153,15 +151,14 @@ void ssd1306Refresh(void)
 
 /**
  *  @brief Enable the OLED panel
- * 
  */
 void ssd1306TurnOn(void)
 {
     ssd1306Command(   SSD1306_DISPLAYON );
 }
+
 /**
  *  @brief Disable the OLED panel
- *  
  */
 void ssd1306TurnOff(void)
 {
@@ -169,6 +166,10 @@ void ssd1306TurnOff(void)
     ssd1306Command(   SSD1306_DISPLAYOFF );
 }
 
+/**
+ * @brief Send command to display
+ * @param comm
+ */
 void  ssd1306Command(  uint8_t comm  ) {
     uint8_t *ptr;
 
@@ -394,21 +395,14 @@ uint16_t color, uint16_t layer) {
 }
 
 /**
- *    @brief  Draws a string using the supplied font data.
- *    @param[in]  x
- *                Starting x co-ordinate
- *    @param[in]  y
- *                Starting y co-ordinate
- *    @param[in]  text
- *                The string to render
- *    @param[in]  font
- *                Pointer to the FONT_DEF to use when drawing the string
- *    @section Example
- *    @code 
- *    // Refresh the screen to see the results
- *    ssd1306Refresh();
- *    @endcode
-*/
+ * @brief  Draws a string using the supplied font data.
+ * @param x
+ * @param y
+ * @param text
+ * @param size
+ * @param color
+ * @param layer
+ */
 void  ssd1306DrawString(int16_t x, int16_t y, int8_t *text, uint8_t size, 
                         uint16_t color, uint16_t layer)
 {
@@ -419,11 +413,9 @@ void  ssd1306DrawString(int16_t x, int16_t y, int8_t *text, uint8_t size,
         pos = pos + ssd1306DrawChar(x + (pos * size + 1), y, text[l], size, color, layer);
     }
 }
-
-
  
 /**
- * 
+ * @brief Mix layers
  */
 #ifdef MULTILAYER 
 void ssd1306MixFrameBuffer(void)
@@ -504,7 +496,6 @@ float GetMemUsage() {
  * 
  * @return 
  */
-//cat /sys/devices/virtual/thermal/thermal_zone0/temp
 int GetCPUTemp() {
    int FileHandler;
    char FileBuffer[1024];
@@ -518,6 +509,10 @@ int GetCPUTemp() {
    return CPU_temp;
 }
 
+/**
+ * 
+ * @return 
+ */
 int main (void) {
     time_t mytime;
     struct tm *tm;
@@ -602,9 +597,7 @@ int main (void) {
         ssd1306DrawString(0,  row * 8, text_buffer, 1, WHITE, LAYER0); 
         row++;
         
-        /* Memory usage
-         * 
-         */
+        /* Memory usage */
         float m = GetMemUsage();
         snprintf ( text_buffer, sizeof(text_buffer), "Mem used: %3.0f%%", m*100 );
         printf("%s\n", text_buffer);
@@ -612,18 +605,14 @@ int main (void) {
         ssd1306DrawRect(0, 0, 127, 13, INVERSE, LAYER0);
         ssd1306FillRect(2, 2, (int)(123 * m), 9, INVERSE, LAYER0);
         
-        /* CPU temperature
-         * 
-         */
+        /* CPU temperature  */
         int t = GetCPUTemp() ;
         snprintf ( text_buffer, sizeof(text_buffer), "CPU temp: %3d C", t );
         printf("%s\n", text_buffer);
         ssd1306DrawString(0,  row * 8, text_buffer, 1, WHITE, LAYER0); 
         row++;
 
-        /* Refresh screen
-         * 
-         */
+        /* Refresh screen */
         ssd1306Refresh();
         SSD1306MSDELAY(1000);
     }
