@@ -15,6 +15,6 @@ Add OLED display with sys info to your Orange PI board
 
 To run app at boot time:
 
-1. sudo crontab -e
-2. add row: @reboot /<path to project>/ssd1306/build/OrangePI_ssd1306
+1. `sudo crontab -e`
+2. add row: `@reboot /<path to project>/ssd1306/build/OrangePI_ssd1306`
 
