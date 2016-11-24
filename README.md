@@ -20,4 +20,4 @@ To run app at boot time:
 
 
 
-![How it works](/img/pic_1.jpg?raw=true)
+![How it works](https://github.com/vadzimyatskevich/OrangePI_OLED/blob/master/img/pic_1.JPG?raw=true)
