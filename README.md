@@ -17,7 +17,7 @@ To run app at boot time:
 
 1. `sudo crontab -e`
 2. add row: `@reboot /<path to project>/ssd1306/build/OrangePI_ssd1306`
-
+3. reboot board & enjoy :)
 
 
 ![How it works](https://github.com/vadzimyatskevich/OrangePI_OLED/blob/master/img/pic_1.JPG?raw=true)
