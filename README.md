@@ -15,8 +15,8 @@ Add OLED display with sys info to your Orange PI board
 
 To run app:
 
-1. 'cd /<path to project>/build/`
-2. './OrangePI_ssd1306'
+1. `cd /<path to project>/build/`
+2. `./OrangePI_ssd1306`
 
 To run app at boot time:
 
