@@ -26,6 +26,6 @@ To run app at boot time:
 3. reboot board & enjoy :)
 
 
-Tested with Armbian image https://www.armbian.com/download/
+Tested with Armbian image https://www.armbian.com/download/, Orange PI Lite and Orange PI Zero boards.
 
 ![How it works](https://github.com/vadzimyatskevich/OrangePI_OLED/blob/master/img/pic_1.JPG?raw=true)
