@@ -12,6 +12,7 @@ Add OLED display with sys info to your Orange PI board
 |      |  GPIO.7   |  7    |
 |`GND` |    0v     |  9    |
 
+Any other H3 and H2+ boards use i2c-0 pins
 
 To run app:
 
