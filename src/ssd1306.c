@@ -23,6 +23,8 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <linux/if_link.h>
+#include <signal.h>
+
 
 #include "ssd1306.h"
 
@@ -32,7 +34,6 @@
 char buf[10];
 int com_serial;
 int failcount;
- 
 int bus; //i2c bus descriptor
 FONT_INFO    *_font; 
 // oled buffer
@@ -44,6 +45,8 @@ static uint8_t    buffer_ol[SSD1306_LCDWIDTH * SSD1306_LCDHEIGHT / 8];
 
 FONT_INFO    *_font;
  
+volatile sig_atomic_t done = 0;
+struct sigaction action;
 void i2c_write( uint8_t addr, 
                 uint8_t * value, 
                 int nbytes);
@@ -509,6 +512,12 @@ int GetCPUTemp() {
    return CPU_temp;
 }
 
+void sig_handler(int signo)
+{
+    done = 1;
+    printf("received signo :%d \n", signo);
+}
+
 /**
  * 
  * @return 
@@ -522,13 +531,25 @@ int main (void) {
     int family, s, n, row;
     char host[NI_MAXHOST];
 
+    
+    // Print pid, so that we can send signals from other shells
+    printf("My pid is: %d\n", getpid());    
+    memset(&action, 0, sizeof(struct sigaction));
+    action.sa_handler = sig_handler;
+    // Intercept SIGHUP and SIGINT
+    if (sigaction(SIGINT, &action, NULL) == -1) {
+        perror("Error: cannot handle SIGINT"); // Should not happen
+    }
+    if (sigaction(SIGTERM, &action, NULL) == -1) {
+        perror("Error: cannot handle SIGTERM"); // Should not happen
+    }
+
     /* Init I2C bus  */
     bus = i2c_init((char*)&"/dev/i2c-0", 0x3c); //dev, slavei2caddr
-
-    
+    /* */
     ssd1306Init(SSD1306_SWITCHCAPVCC);
 
-    while (1) {
+    while (done == 0) {
         row = 2;
         _font = (FONT_INFO*)&ubuntuMono_8ptFontInfo;
         /* Display time */
@@ -617,7 +638,12 @@ int main (void) {
         SSD1306MSDELAY(1000);
     }
 
-    printf("All done!\r\n");
+
+    _font = (FONT_INFO*)&ubuntuMono_24ptFontInfo;
+    ssd1306ClearScreen(LAYER0 | LAYER1) ;
+    ssd1306DrawString(30,  16, "Buy!!", 1, WHITE, LAYER0);
+    ssd1306Refresh();
     close(bus);
+    printf("All done!\r\n");
     return 0;
 }
