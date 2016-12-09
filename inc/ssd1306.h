@@ -104,6 +104,11 @@ void        ssd1306DrawString( int16_t, int16_t, int8_t * , uint8_t, uint16_t, u
 //void        ssd1306ShiftFrameBuffer( uint16_t height, uint16_t direction);
 void        ssd1306MixFrameBuffer(void);
 
+void i2c_write( uint8_t addr, 
+                uint8_t * value, 
+                int nbytes);
+
+
 
 #ifdef __cplusplus
 }

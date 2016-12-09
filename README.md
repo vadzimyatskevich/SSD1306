@@ -4,7 +4,7 @@ Add OLED display with sys info to your Orange PI board
 
 **connection Orange PI Lite:**
 
-| OLED |    Name   |  Pin  | 
+| OLED |    Name   |  Pin  |
 |:----:|:---------:|:-----:|
 |`VDD` |    3.3v   |  1    |
 |`SDA` |   SDA.0   |  3    |
