@@ -43,10 +43,6 @@ static uint8_t    buffer_ol[SSD1306_LCDWIDTH * SSD1306_LCDHEIGHT / 8];
 #endif    
 
 
-volatile sig_atomic_t done = 0;
-struct sigaction action;
-
-
 /**
  * @brief Init I2Cdevice
  * @param bus

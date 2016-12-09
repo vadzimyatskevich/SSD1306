@@ -75,7 +75,7 @@ extern "C" {
 // Initialisation/Config Prototypes
 //inline void ssd1306SendByte(uint8_t byte);
 //void        ssd1306SendByte(uint8_t);
-//void        ssd1306Init (uint8_t);
+void        ssd1306Init (uint8_t);
 void        ssd1306Command( uint8_t comm );
 void        ssd1306Data( uint8_t *data, int size  );
 void        ssd1306Refresh ( void );
@@ -107,7 +107,7 @@ void        ssd1306MixFrameBuffer(void);
 void i2c_write( uint8_t addr, 
                 uint8_t * value, 
                 int nbytes);
-
+int i2c_init(char * bus, int addr);
 
 
 #ifdef __cplusplus
