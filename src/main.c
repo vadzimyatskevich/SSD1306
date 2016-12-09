@@ -226,11 +226,9 @@ int main(int argc, char** argv) {
 
     _font = (FONT_INFO*)&ubuntuMono_24ptFontInfo;
     ssd1306ClearScreen(LAYER0 | LAYER1) ;
-    ssd1306DrawString(30,  16, "Buy!!", 1, WHITE, LAYER0);
     ssd1306Refresh();
     close(bus);
     printf("All done!\r\n");
     return (EXIT_SUCCESS);
 }
-
 
