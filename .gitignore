@@ -33,5 +33,5 @@
 *.su
 
 /nbproject/*
-#/build/*
-/build/
+/build/*
+#/build/
