@@ -17,7 +17,7 @@ To run app:
 
 1. `cd /<path to project>`
 2. `make`
-3. `./build/OrangePI_ssd1306`
+3. `sudo ./build/OrangePI_ssd1306`
 
 To run app at boot time:
 
