@@ -15,7 +15,8 @@ Any other H3 and H2+ boards use i2c-0 pins
 
 To run app:
 
-1. `cd /<path to project>`
+1. `git clone https://github.com/vadzimyatskevich/SSD1306.git`
+1. `cd /<path to project>/SSD1306`
 2. `make`
 3. `sudo ./build/OrangePI_ssd1306`
 
