@@ -88,7 +88,7 @@ int GetCPUTemp() {
    read(FileHandler, FileBuffer, sizeof(FileBuffer) - 1);
    sscanf(FileBuffer, "%d", &CPU_temp);
    close(FileHandler);
-   return CPU_temp;
+   return CPU_temp / 1000;
 }
 
 void sig_handler(int signo)
