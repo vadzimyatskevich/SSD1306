@@ -62,14 +62,14 @@ float GetCPULoad() {
 float GetMemUsage() {
     int FileHandler;
     char FileBuffer[1024];
-    int memTotal, memFree, memBuf,memCached;
+    int memTotal, memFree, memAvail, memBuf,memCached;
     float result;
     FileHandler = open("/proc/meminfo", O_RDONLY);
     if(FileHandler < 0) {
         return -1; }
     read(FileHandler, FileBuffer, sizeof(FileBuffer) - 1);
-    sscanf(FileBuffer, "MemTotal:         %d kB\n MemFree:          %d kB\n Buffers:           %d kB\n Cached:           %d kB",
-     &memTotal, &memFree, &memBuf, &memCached);
+    sscanf(FileBuffer, "MemTotal:         %d kB\n MemFree:          %d kB\n MemAvailable:          %d kB\n Buffers:           %d kB\n Cached:           %d kB",
+     &memTotal, &memFree, &memAvail, &memBuf, &memCached);
     close(FileHandler);
     result = 1.0 - (float)(memFree + memCached) / memTotal;
     return result;
@@ -88,7 +88,7 @@ int GetCPUTemp() {
    read(FileHandler, FileBuffer, sizeof(FileBuffer) - 1);
    sscanf(FileBuffer, "%d", &CPU_temp);
    close(FileHandler);
-   return CPU_temp;
+   return CPU_temp / 1000;
 }
 
 void sig_handler(int signo)
