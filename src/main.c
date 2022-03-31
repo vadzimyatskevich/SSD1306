@@ -124,7 +124,7 @@ int main(int argc, char** argv) {
     }
 
     /* Init I2C bus  */
-    bus = i2c_init((char*)&"/dev/i2c-0", 0x3c); //dev, slavei2caddr
+    bus = i2c_init((char*)&"/dev/i2c-1", 0x3c); //dev, slavei2caddr
     /* */
     ssd1306Init(SSD1306_SWITCHCAPVCC);
 

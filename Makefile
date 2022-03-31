@@ -8,13 +8,13 @@ LIBS   = -lm
 BUILDDIR = build
 _DEPS  = ssd1306.h
 DEPS   = $(patsubst %,$(IDIR)/%,$(_DEPS))
-_OBJ   = example.o ssd1306.o ubuntuMono_8pt.o ubuntuMono_16pt.o ubuntuMono_24pt.o ubuntuMono_48pt.o
+_OBJ   = main.o ssd1306.o ubuntuMono_8pt.o ubuntuMono_16pt.o ubuntuMono_24pt.o ubuntuMono_48pt.o
 OBJ    = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 $(ODIR)/%.o: $(SOURCE)/%.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-$(BUILDDIR)/OrangePI_ssd1306: $(OBJ)
+$(BUILDDIR)/OPI_OLED: $(OBJ)
 	gcc -o $@ $^ $(CFLAGS) $(LIBS)
 
 .PHONY: clean
