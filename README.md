@@ -23,7 +23,7 @@ To run app:
 To run app at boot time:
 
 1. `sudo crontab -e`
-2. add row: `@reboot /<absolute path to the executable>/ArmbianOLED` ex `@reboot /home/orangepi/SSD1306/build/ArmbianOLED`
+2. add row: `@reboot /home/<your username here>/SSD1306/build/ArmbianOLED` ex `@reboot /home/orangepi/SSD1306/build/ArmbianOLED`
 3. reboot board & enjoy :)
 
 
