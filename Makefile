@@ -14,7 +14,7 @@ OBJ    = $(patsubst %,$(ODIR)/%,$(_OBJ))
 $(ODIR)/%.o: $(SOURCE)/%.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-$(BUILDDIR)/OPI_OLED: $(OBJ)
+$(BUILDDIR)/ArmbianOLED: $(OBJ)
 	gcc -o $@ $^ $(CFLAGS) $(LIBS)
 
 .PHONY: clean

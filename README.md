@@ -11,19 +11,19 @@ Add OLED display with sys info to your Orange PI board
 |`SCK` |   SCL.0   |  5    |
 |`GND` |    0v     |  9    |
 
-Any other H3 and H2+ boards use i2c-0 pins
+May work on other H5, H3 and H2+ boards uder Armbian. Use i2c-0 pins.To change I2C bus make corresponding changes in main.c row 127 (`bus = i2c_init((char*)&"/dev/i2c-0", 0x3c);`)
 
 To run app:
 
 1. `git clone https://github.com/vadzimyatskevich/SSD1306.git`
-1. `cd /<path to project>/SSD1306`
+1. `cd SSD1306`
 2. `make`
-3. `sudo ./build/OrangePI_ssd1306`
+3. `sudo ./build/ArmbianOLED`
 
 To run app at boot time:
 
 1. `sudo crontab -e`
-2. add row: `@reboot /<path to project>/build/OrangePI_ssd1306`
+2. add row: `@reboot /<absolute path to the executable>/ArmbianOLED` ex `@reboot /home/orangepi/SSD1306/build/ArmbianOLED`
 3. reboot board & enjoy :)
 
 
