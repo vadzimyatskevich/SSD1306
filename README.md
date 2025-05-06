@@ -1,32 +1,78 @@
-# OrangePI_OLED
-Add OLED display with sys info to your Orange PI board
+# OrangePI\_OLED
 
+Add an OLED display with system info to your Orange Pi board.
 
-**connection Orange PI Lite:**
+## Connection for Orange Pi Lite
 
-| OLED |    Name   |  Pin  |
-|:----:|:---------:|:-----:|
-|`VDD` |    3.3v   |  1    |
-|`SDA` |   SDA.0   |  3    |
-|`SCK` |   SCL.0   |  5    |
-|`GND` |    0v     |  9    |
+|  OLED |  Name | Pin |
+| :---: | :---: | :-: |
+| `VDD` |  3.3V |  1  |
+| `SDA` | SDA.0 |  3  |
+| `SCK` | SCL.0 |  5  |
+| `GND` |   0V  |  9  |
 
-May work on other H5, H3 and H2+ boards uder Armbian. Use i2c-0 pins.To change I2C bus make corresponding changes in main.c row 127 (`bus = i2c_init((char*)&"/dev/i2c-0", 0x3c);`)
+This setup may also work on other H5, H3, and H2+ boards running Armbian. Use the I2C-0 pins.
 
-To run app:
+To change the I2C bus, modify line 127 in `main.c`:
 
-1. `git clone https://github.com/vadzimyatskevich/SSD1306.git`
-1. `cd SSD1306`
-2. `make`
-3. `sudo ./build/ArmbianOLED`
+```c
+bus = i2c_init((char*)"/dev/i2c-0", 0x3c);
+```
 
-To run app at boot time:
+## How to Run the App
 
-1. `sudo crontab -e`
-2. add row: `@reboot /home/<your username here>/SSD1306/build/ArmbianOLED` ex `@reboot /home/orangepi/SSD1306/build/ArmbianOLED`
-3. reboot board & enjoy :)
+1. Clone the repository:
 
+   ```bash
+   git clone https://github.com/vadzimyatskevich/SSD1306.git
+   ```
+2. Navigate into the project directory:
 
-Tested with Armbian image https://www.armbian.com/download/, Orange PI Lite and Orange PI Zero boards.
+   ```bash
+   cd SSD1306
+   ```
+3. Build the project:
+
+   ```bash
+   make
+   ```
+4. Run the application:
+
+   ```bash
+   sudo ./build/ArmbianOLED
+   ```
+
+## Run at Boot
+
+1. Edit the root user's crontab:
+
+   ```bash
+   sudo crontab -e
+   ```
+2. Add the following line (replace `<your-username>` with your actual username):
+
+   ```bash
+   @reboot /home/<your-username>/SSD1306/build/ArmbianOLED
+   ```
+
+   Example:
+
+   ```bash
+   @reboot /home/orangepi/SSD1306/build/ArmbianOLED
+   ```
+3. Reboot your board:
+
+   ```bash
+   sudo reboot
+   ```
+
+## Tested On
+
+* Orange Pi Lite
+* Orange Pi Zero
+* Armbian ([https://www.armbian.com/download/](https://www.armbian.com/download/))
+
+## Demo
+
 [![How it works](https://github.com/vadzimyatskevich/OrangePI_OLED/blob/master/img/pic_1.JPG)](https://www.youtube.com/watch?v=xUK7WmqTY78)
 ![How it works](https://github.com/vadzimyatskevich/OrangePI_OLED/blob/master/img/pic_2.jpg?raw=true)
