@@ -13,10 +13,11 @@ Add an OLED display with system info to your Orange Pi board.
 
 This setup may also work on other H5, H3, and H2+ boards running Armbian. Use the I2C-0 pins.
 
-To change the I2C bus, modify line 127 in `main.c`:
+To change the I2C bus, modify line 266 in `main.c`:
 
 ```c
-bus = i2c_init((char*)"/dev/i2c-0", 0x3c);
+    /* Init I2C bus  */
+    bus = i2c_init((char *)&"/dev/i2c-0", 0x3c); // dev, slavei2caddr
 ```
 
 ## How to Run the App
