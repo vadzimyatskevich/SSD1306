@@ -20,6 +20,11 @@ To change the I2C bus, modify line 266 in `main.c`:
     bus = i2c_init((char *)&"/dev/i2c-0", 0x3c); // dev, slavei2caddr
 ```
 
+If you want to display only a specific network interface, update lines 303–304 in `main.c` to something like:
+
+```c
+if (strncmp(ifa->ifa_name, "ethX", 4) == 0)  // replace 'ethX' with the interface you need
+```
 ## How to Run the App
 
 1. Clone the repository:
